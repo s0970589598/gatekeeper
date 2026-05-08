@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    html {
+      scrollbar-color: #ff6b9d #2e2e2e;
+      scrollbar-width: thin;
+    }
+    *::-webkit-scrollbar { width: 10px; }
+    *::-webkit-scrollbar-track { background: #2e2e2e; border-radius: 8px; }
+    *::-webkit-scrollbar-thumb { background: #ff6b9d; border: 2px solid #2e2e2e; border-radius: 8px; }
+    *::-webkit-scrollbar-thumb:hover { background: #e55289; }
+
+    body {
+      width: 320px;
+      font-family: sans-serif;
+      padding: 14px;
+      background: #1a1a1a;
+      color: #fff;
+    }
+    h1 {
+      font-size: 16px;
+      margin: 0 0 16px;
+      text-align: center;
+      color: #fff;
+    }
+    .section { margin-bottom: 14px; }
+    .section label {
+      display: block;
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 6px;
+    }
+    .label-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .label-row label { margin-bottom: 0; }
+    .section input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      border-radius: 8px;
+      border: none;
+      background: #2e2e2e;
+      color: #fff;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .section textarea {
+      width: 100%;
+      min-height: 76px;
+      padding: 8px;
+      border-radius: 8px;
+      border: none;
+      background: #2e2e2e;
+      color: #fff;
+      font-size: 13px;
+      line-height: 1.45;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      background: #ff6b9d;
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover { background: #e55289; }
+    #dismissBtn {
+      background: #444;
+      margin-bottom: 12px;
+      display: none;
+    }
+    #dismissBtn:hover { background: #555; }
+    .saved {
+      text-align: center;
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 8px;
+      display: none;
+    }
+    .hint {
+      margin: 6px 0 0;
+      font-size: 11px;
+      line-height: 1.4;
+      color: #888;
+    }
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      line-height: 1.4;
+      color: #ddd;
+      cursor: pointer;
+    }
+    .toggle-row input {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      accent-color: #ff6b9d;
+    }
+  </style>
+</head>
+<body>
+  <h1>Rabbit Gatekeeper</h1>
+
+  <div class="section">
+    <label data-i18n="usageLimitLabel"></label>
+    <input type="number" id="usageLimit" min="1" max="480" value="30">
+  </div>
+
+  <div class="section">
+    <label data-i18n="breakTimeLabel"></label>
+    <input type="number" id="breakTime" min="1" max="60" value="5">
+  </div>
+
+  <div class="section">
+    <label class="toggle-row">
+      <input type="checkbox" id="rabbitEnabled">
+      <span data-i18n="rabbitEnabledLabel"></span>
+    </label>
+  </div>
+
+  <div class="section">
+    <div class="label-row">
+      <label for="customDomains" data-i18n="targetSitesLabel"></label>
+    </div>
+    <textarea id="customDomains" spellcheck="false" placeholder="x.com&#10;youtube.com&#10;example.com"></textarea>
+    <p class="hint" data-i18n="customDomainsHint"></p>
+  </div>
+
+  <button id="dismissBtn" data-i18n="dismissButton"></button>
+  <button id="saveBtn" data-i18n="saveButton"></button>
+  <div class="saved" id="savedMsg" data-i18n="savedMessage"></div>
+
+  <script src="shared.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

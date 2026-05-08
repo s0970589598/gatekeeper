@@ -1,0 +1,32 @@
+{
+  "appName": {
+    "message": "Rabbit Gatekeeper"
+  },
+  "appDescription": {
+    "message": "Spend too long on selected sites? A rabbit hijacks your screen for a forced break."
+  },
+  "usageLimitLabel": {
+    "message": "Minutes before the rabbit appears"
+  },
+  "breakTimeLabel": {
+    "message": "Break time (minutes)"
+  },
+  "targetSitesLabel": {
+    "message": "Target sites"
+  },
+  "rabbitEnabledLabel": {
+    "message": "Show the rabbit"
+  },
+  "saveButton": {
+    "message": "Save"
+  },
+  "savedMessage": {
+    "message": "Saved!"
+  },
+  "dismissButton": {
+    "message": "Shoo, bunny!"
+  },
+  "customDomainsHint": {
+    "message": "One per line, or separated by commas. URLs are OK."
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "appName": {
+    "message": "兔子守門員"
+  },
+  "appDescription": {
+    "message": "在指定網站上花太久？兔子會跑出來霸佔螢幕，強制讓你休息。"
+  },
+  "usageLimitLabel": {
+    "message": "幾分鐘後兔子出現"
+  },
+  "breakTimeLabel": {
+    "message": "休息時間（分鐘）"
+  },
+  "targetSitesLabel": {
+    "message": "監控的網站"
+  },
+  "rabbitEnabledLabel": {
+    "message": "啟用兔子"
+  },
+  "saveButton": {
+    "message": "儲存"
+  },
+  "savedMessage": {
+    "message": "已儲存！"
+  },
+  "dismissButton": {
+    "message": "讓兔子離開"
+  },
+  "customDomainsHint": {
+    "message": "每行一個網域，或用逗號分隔。可以用完整網址。"
+  }
+}

@@ -1,0 +1,28 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+
+# Temp / build artifacts
+/tmp/
+*.log
+
+# Real-ESRGAN download artifacts (binary + models tracked, but skip zip + samples)
+tools/realesrgan/*.zip
+tools/realesrgan/input*.jpg
+tools/realesrgan/input*.png
+tools/realesrgan/onepiece_demo.mp4
+
+# Claude Code session data (per-machine, not for sharing)
+.claude/
+.playwright-mcp/
+
+# Python venvs (in case something gets re-introduced)
+.venv/
+__pycache__/
+*.pyc
