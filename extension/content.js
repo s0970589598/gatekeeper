@@ -1,9 +1,5 @@
 const shared = globalThis.RabbitGatekeeperShared;
 
-const preloadVideo = document.createElement('video');
-preloadVideo.preload = 'auto';
-preloadVideo.muted = true;
-
 const preventScroll = (e) => e.preventDefault();
 
 const hostname = location.hostname;
@@ -28,6 +24,7 @@ function applySettings(settings, { resetUsage = false } = {}) {
   currentCustomDomains = mergedSettings.customDomains;
   currentUsageKey = getMatchedDomain(mergedSettings);
   currentTrackingEnabled = mergedSettings.rabbitEnabled && !!currentUsageKey;
+  currentRabbitChoice = mergedSettings.rabbitChoice;
 
   console.log('[rabbit-gatekeeper] applySettings', {
     hostname,
@@ -101,6 +98,7 @@ let currentBreakTime = 5;
 let currentTrackingEnabled = false;
 let currentCustomDomains = [];
 let currentUsageKey = '';
+let currentRabbitChoice = shared.RABBIT_RANDOM;
 let rabbitAssetsPrepared = false;
 let trackerRunId = 0;
 
@@ -260,8 +258,14 @@ function startTracking(usageLimit, breakTime, { resetUsage = false } = {}) {
 
 function prepareRabbitAssets() {
   if (rabbitAssetsPrepared) return;
-  preloadVideo.src = chrome.runtime.getURL('assets/rabbit.webm');
-  preloadVideo.load();
+  // Preload all known rabbits so the chosen one is ready when the timer fires
+  for (const r of shared.AVAILABLE_RABBITS) {
+    const v = document.createElement('video');
+    v.preload = 'auto';
+    v.muted = true;
+    v.src = chrome.runtime.getURL(r.asset);
+    v.load();
+  }
   rabbitAssetsPrepared = true;
 }
 
@@ -314,8 +318,10 @@ function showRabbit(breakMinutes, usageLimit, onBreakEnd) {
   }
   updateCountdown();
 
+  const chosenRabbit = shared.pickRabbit(currentRabbitChoice);
   const video = document.createElement('video');
-  video.src = chrome.runtime.getURL('assets/rabbit.webm');
+  video.src = chrome.runtime.getURL(chosenRabbit.asset);
+  video.dataset.rabbitId = chosenRabbit.id;
   video.autoplay = true;
   video.muted = true;
   video.loop = true;

@@ -28,5 +28,11 @@
   },
   "customDomainsHint": {
     "message": "One per line, or separated by commas. URLs are OK."
+  },
+  "rabbitChoiceLabel": {
+    "message": "Which rabbit"
+  },
+  "rabbitChoiceRandom": {
+    "message": "Random"
   }
 }

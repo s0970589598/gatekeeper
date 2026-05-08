@@ -17,11 +17,32 @@
     'bsky.app',
   ]);
 
+  // Available rabbit videos. Add more entries when you ship new ones.
+  // `id` must be a stable string (used as the storage value).
+  const AVAILABLE_RABBITS = Object.freeze([
+    { id: 'sora',   labelEn: 'Pumpkin Rabbit',  labelZh: '南瓜帽兔',   asset: 'assets/rabbit.webm'  },
+    { id: 'fluffy', labelEn: 'Fluffy White',    labelZh: '長毛白兔',   asset: 'assets/rabbit2.webm' },
+  ]);
+
+  const RABBIT_RANDOM = 'random';
+
+  function isValidRabbitId(id) {
+    return id === RABBIT_RANDOM || AVAILABLE_RABBITS.some((r) => r.id === id);
+  }
+
+  function pickRabbit(selectedId) {
+    if (selectedId === RABBIT_RANDOM || !isValidRabbitId(selectedId)) {
+      return AVAILABLE_RABBITS[Math.floor(Math.random() * AVAILABLE_RABBITS.length)];
+    }
+    return AVAILABLE_RABBITS.find((r) => r.id === selectedId);
+  }
+
   const DEFAULT_SETTINGS = Object.freeze({
     rabbitEnabled: true,
     usageLimit: 30,
     breakTime: 5,
     customDomains: DEFAULT_DOMAINS,
+    rabbitChoice: RABBIT_RANDOM,
   });
 
   function clampNumber(value, min, max, fallback) {
@@ -83,6 +104,9 @@
       safeSettings,
       'customDomains'
     );
+    const rabbitChoice = isValidRabbitId(safeSettings.rabbitChoice)
+      ? safeSettings.rabbitChoice
+      : DEFAULT_SETTINGS.rabbitChoice;
     return {
       rabbitEnabled: safeSettings.rabbitEnabled !== false,
       usageLimit: clampNumber(safeSettings.usageLimit, 1, 480, DEFAULT_SETTINGS.usageLimit),
@@ -90,16 +114,21 @@
       customDomains: hasCustomDomainsSetting
         ? customDomains
         : [...DEFAULT_SETTINGS.customDomains],
+      rabbitChoice,
     };
   }
 
   return {
     DEFAULT_SETTINGS,
     DEFAULT_DOMAINS,
+    AVAILABLE_RABBITS,
+    RABBIT_RANDOM,
     clampNumber,
     hostnameMatchesDomain,
     normalizeDomainEntry,
     normalizeDomainList,
     normalizeSettings,
+    isValidRabbitId,
+    pickRabbit,
   };
 });

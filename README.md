@@ -101,11 +101,10 @@ ffmpeg -y -framerate 30 -i /tmp/combined/%05d.png \
   -auto-alt-ref 0 -metadata:s:v:0 alpha_mode=1 -an \
   extension/assets/rabbit.webm
 
-# 8. 驗證 alpha 真的有編進去
-ffmpeg -y -ss 1 -i extension/assets/rabbit.webm -frames:v 1 -update 1 -pix_fmt rgba /tmp/check.png
-ffmpeg -y -i /tmp/check.png -vf alphaextract /tmp/check_alpha.png
-open /tmp/check_alpha.png
-# 應該看到主體輪廓（白底黑背景），不是整張白
+# 8. 驗證 alpha 真的有編進去（看 ALPHA_MODE tag，不要看 pix_fmt）
+ffprobe -v error -select_streams v:0 -show_streams extension/assets/rabbit.webm | grep -i alpha
+# 要看到：TAG:ALPHA_MODE=1
+# 註：ffprobe 看 pix_fmt 永遠顯示 yuv420p（不準），瀏覽器才是判讀 ALPHA_MODE 的
 
 # 9. reload extension（chrome://extensions/ 點 ↻），F5 測試頁面
 ```

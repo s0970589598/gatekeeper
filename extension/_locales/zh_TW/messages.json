@@ -28,5 +28,11 @@
   },
   "customDomainsHint": {
     "message": "每行一個網域，或用逗號分隔。可以用完整網址。"
+  },
+  "rabbitChoiceLabel": {
+    "message": "選兔子"
+  },
+  "rabbitChoiceRandom": {
+    "message": "隨機"
   }
 }

@@ -4,6 +4,26 @@ document.querySelectorAll('[data-i18n]').forEach(el => {
 
 const shared = globalThis.RabbitGatekeeperShared;
 
+// Populate rabbit choice dropdown from AVAILABLE_RABBITS
+(function populateRabbitChoices() {
+  const sel = document.getElementById('rabbitChoice');
+  const locale = chrome.i18n.getMessage('@@ui_locale') || '';
+  const useZh = locale.startsWith('zh');
+  const opts = [
+    { id: shared.RABBIT_RANDOM, label: chrome.i18n.getMessage('rabbitChoiceRandom') },
+    ...shared.AVAILABLE_RABBITS.map((r) => ({
+      id: r.id,
+      label: useZh ? r.labelZh : r.labelEn,
+    })),
+  ];
+  for (const o of opts) {
+    const el = document.createElement('option');
+    el.value = o.id;
+    el.textContent = o.label;
+    sel.appendChild(el);
+  }
+})();
+
 function mergeSettingsWithDefaults(settings) {
   return shared.normalizeSettings(settings);
 }
@@ -42,6 +62,7 @@ chrome.storage.local.get(null, (settings) => {
   document.getElementById('breakTime').value = mergedSettings.breakTime;
   document.getElementById('customDomains').value = mergedSettings.customDomains.join('\n');
   document.getElementById('rabbitEnabled').checked = mergedSettings.rabbitEnabled;
+  document.getElementById('rabbitChoice').value = mergedSettings.rabbitChoice;
 });
 
 document.getElementById('saveBtn').addEventListener('click', () => {
@@ -50,6 +71,7 @@ document.getElementById('saveBtn').addEventListener('click', () => {
     usageLimit: getClampedNumberValue('usageLimit', defaults.usageLimit),
     breakTime: getClampedNumberValue('breakTime', defaults.breakTime),
     customDomains: shared.normalizeDomainList(document.getElementById('customDomains').value),
+    rabbitChoice: document.getElementById('rabbitChoice').value,
   };
 
   document.getElementById('usageLimit').value = settings.usageLimit;

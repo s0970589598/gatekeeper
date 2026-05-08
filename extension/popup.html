@@ -39,7 +39,8 @@
       margin-bottom: 6px;
     }
     .label-row label { margin-bottom: 0; }
-    .section input[type="number"] {
+    .section input[type="number"],
+    .section select {
       width: 100%;
       padding: 8px;
       border-radius: 8px;
@@ -128,6 +129,11 @@
       <input type="checkbox" id="rabbitEnabled">
       <span data-i18n="rabbitEnabledLabel"></span>
     </label>
+  </div>
+
+  <div class="section">
+    <label data-i18n="rabbitChoiceLabel"></label>
+    <select id="rabbitChoice"></select>
   </div>
 
   <div class="section">
