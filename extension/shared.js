@@ -20,8 +20,15 @@
   // Available rabbit videos. Add more entries when you ship new ones.
   // `id` must be a stable string (used as the storage value).
   const AVAILABLE_RABBITS = Object.freeze([
-    { id: 'sora',   labelEn: 'Pumpkin Rabbit',  labelZh: '南瓜帽兔',   asset: 'assets/rabbit.webm'  },
-    { id: 'fluffy', labelEn: 'Fluffy White',    labelZh: '長毛白兔',   asset: 'assets/rabbit2.webm' },
+    { id: 'sora',      labelEn: 'Pumpkin Rabbit',  labelZh: '南瓜帽兔', asset: 'assets/rabbit.webm'   },
+    { id: 'fluffy',    labelEn: 'Fluffy White',    labelZh: '長毛白兔', asset: 'assets/rabbit2.webm'  },
+    { id: 'sleeping',  labelEn: 'Sleeping Bunny',  labelZh: '睡睡兔',   asset: 'assets/rabbit3.webm'  },
+    { id: 'bowtie',    labelEn: 'Bow-tie Bunny',   labelZh: '領結兔',   asset: 'assets/rabbit5.webm'  },
+    { id: 'hay',       labelEn: 'Hay Eater',       labelZh: '吃草兔',   asset: 'assets/rabbit6.webm'  },
+    { id: 'gray',      labelEn: 'Grey Chewer',     labelZh: '灰兔咬木', asset: 'assets/rabbit7.webm'  },
+    { id: 'tuxedo',    labelEn: 'Tuxedo Bunny',    labelZh: '小花兔',   asset: 'assets/rabbit8.webm'  },
+    { id: 'dancing',   labelEn: 'Dancing Rabbits', labelZh: '舞會兔群', asset: 'assets/rabbit9.webm'  },
+    { id: 'teletubby', labelEn: 'Rainbow Bunnies', labelZh: '彩虹兔團', asset: 'assets/rabbit10.webm' },
   ]);
 
   const RABBIT_RANDOM = 'random';

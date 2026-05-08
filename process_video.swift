@@ -26,6 +26,7 @@ let nominalFps = videoTrack.nominalFrameRate
 let totalFrames = Int(asset.duration.seconds * Double(nominalFps))
 
 let maskDir = ProcessInfo.processInfo.environment["MASK_DIR"]  // if set: read pre-computed PNG masks instead of running Vision
+let mergeAll = ProcessInfo.processInfo.environment["MERGE_ALL"] == "1"  // include every detected instance instead of just the largest
 let enhance = ProcessInfo.processInfo.environment["ENHANCE"] != "0"
 let smoothAlphaEnv = ProcessInfo.processInfo.environment["SMOOTH"] ?? "1.0"
 let smoothAlpha = max(0, min(1, Double(smoothAlphaEnv) ?? 1.0))  // 1.0 = no temporal smoothing (default)
@@ -39,6 +40,7 @@ print("Input:  \(inputPath)")
 print("Output: \(outputPath)")
 print("Track:  \(Int(naturalSize.width))x\(Int(naturalSize.height)) @ \(nominalFps)fps, ~\(totalFrames) frames")
 print("Mask:    \(maskDir ?? "Apple Vision (per-frame)")")
+print("MergeAll: \(mergeAll ? "ON (include every instance)" : "OFF (largest only)")")
 print("Enhance: \(enhance ? "ON (sharpen + contrast + denoise)" : "OFF")")
 print("Refine:  \(refine ? "ON (close r=\(closeRadius), blur r=\(edgeBlur), thresh=\(thresholdSteepness))" : "OFF")")
 print("TempSmooth: alpha=\(smoothAlpha) (\(Int(smoothAlpha*100))% cur + \(Int((1-smoothAlpha)*100))% prev) — 1.0=off")
@@ -169,28 +171,37 @@ while let sampleBuffer = readerOutput.copyNextSampleBuffer() {
             try handler.perform([request])
             if let observation = request.results?.first {
                 if observation.allInstances.count > 1 { multiInstanceFrames += 1 }
-                // Pick the largest instance by mask area (avoids spurious secondary detections like cage bars)
-                var bestInstance = observation.allInstances.first ?? 1
-                if observation.allInstances.count > 1 {
-                    var bestArea = -1
-                    for idx in observation.allInstances {
-                        if let mask = try? observation.generateMask(forInstances: IndexSet(integer: idx)) {
-                            CVPixelBufferLockBaseAddress(mask, .readOnly)
-                            let w = CVPixelBufferGetWidth(mask), h = CVPixelBufferGetHeight(mask)
-                            let bpr = CVPixelBufferGetBytesPerRow(mask)
-                            let base = CVPixelBufferGetBaseAddress(mask)!.assumingMemoryBound(to: UInt8.self)
-                            var area = 0
-                            for y in stride(from: 0, to: h, by: 4) {
-                                let row = base + y * bpr
-                                for x in stride(from: 0, to: w, by: 4) where row[x] > 32 { area += 1 }
+
+                let chosenInstances: IndexSet
+                if mergeAll {
+                    // Include every detected instance (multi-subject scenes like 5 rabbits dancing)
+                    chosenInstances = observation.allInstances
+                } else {
+                    // Pick the largest instance by mask area (avoids spurious secondary detections like cage bars)
+                    var bestInstance = observation.allInstances.first ?? 1
+                    if observation.allInstances.count > 1 {
+                        var bestArea = -1
+                        for idx in observation.allInstances {
+                            if let mask = try? observation.generateMask(forInstances: IndexSet(integer: idx)) {
+                                CVPixelBufferLockBaseAddress(mask, .readOnly)
+                                let w = CVPixelBufferGetWidth(mask), h = CVPixelBufferGetHeight(mask)
+                                let bpr = CVPixelBufferGetBytesPerRow(mask)
+                                let base = CVPixelBufferGetBaseAddress(mask)!.assumingMemoryBound(to: UInt8.self)
+                                var area = 0
+                                for y in stride(from: 0, to: h, by: 4) {
+                                    let row = base + y * bpr
+                                    for x in stride(from: 0, to: w, by: 4) where row[x] > 32 { area += 1 }
+                                }
+                                CVPixelBufferUnlockBaseAddress(mask, .readOnly)
+                                if area > bestArea { bestArea = area; bestInstance = idx }
                             }
-                            CVPixelBufferUnlockBaseAddress(mask, .readOnly)
-                            if area > bestArea { bestArea = area; bestInstance = idx }
                         }
                     }
+                    chosenInstances = IndexSet(integer: bestInstance)
                 }
+
                 let rm = try observation.generateScaledMaskForImage(
-                    forInstances: IndexSet(integer: bestInstance),
+                    forInstances: chosenInstances,
                     from: handler
                 )
                 let ci = CIImage(cvPixelBuffer: rm)

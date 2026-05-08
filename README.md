@@ -126,6 +126,7 @@ ffprobe -v error -select_streams v:0 -show_streams extension/assets/rabbit.webm 
 | 變數 | 預設 | 作用 |
 |---|---|---|
 | `MASK_DIR` | (off) | 設了就讀外部 PNG mask 取代 Apple Vision |
+| `MERGE_ALL` | 0 | 設 `1` 把全部偵測到的 instance 合併（多主體場景用，例如多隻兔子同框）。預設只挑最大那個 instance，單主體時對，群體時會掉旁邊的小主體 |
 | `ENHANCE` | 1 | 跑 Vision 前對影格做銳化 + 對比 |
 | `REFINE` | 1 | 對 mask 做空間修整（補洞 + 邊緣 blur + 軟 threshold） |
 | `SMOOTH` | 1.0 | 時間平滑（< 1.0 會有拖影，**別開**） |
